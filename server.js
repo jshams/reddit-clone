@@ -4,9 +4,10 @@ const app = express()
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 
-require('./controllers/posts.js')(app);
 // Set db
 require('./data/reddit-db');
+require('./controllers/posts.js')(app);
+
 
 // Use Body Parser
 app.use(bodyParser.json());
@@ -17,15 +18,8 @@ app.use(expressValidator());
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 
-app.get('/', (req, res) => {
-  res.render('home', {msg: 'reddit.js'});
-})
-
-app.get('/posts/new', (req, res) => {
-  res.render('posts-new');
-})
 
 
 app.listen(3000, () => {
   console.log('App listening on port 3000!')
-})
+}) 
