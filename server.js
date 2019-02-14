@@ -7,6 +7,8 @@ const expressValidator = require('express-validator');
 // Set db
 require('./data/reddit-db');
 require('./controllers/posts.js')(app);
+require('./controllers/comments.js')(app);
+
 
 
 // Use Body Parser
