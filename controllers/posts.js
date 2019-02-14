@@ -16,6 +16,17 @@ module.exports = (app) => {
     res.render('posts-new');
   })
 
+  app.get("/posts/:id", function(req, res) {
+    // LOOK UP THE POST
+    Post.findById(req.params.id)
+      .then(post => {
+        res.render("posts-show", { post });
+      })
+      .catch(err => {
+        console.log(err.message);
+      });
+  });
+
   // CREATE
   app.post('/posts/new', (req, res) => {
     // INSTANTIATE INSTANCE OF POST MODEL
