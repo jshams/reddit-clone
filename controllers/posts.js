@@ -2,14 +2,12 @@ module.exports = (app) => {
   const Post = require('../models/post');
 
   app.get('/', (req, res) => {
-    Post.find({})
-  .then(posts => {
-    res.render("posts-index", { posts });
-  })
-  .catch(err => {
-    console.log(err.message);
+    Post.find({}).then(posts => {
+      res.render("posts-index", { posts });
+    }).catch(err => {
+      console.log(err.message);
+    });
   });
-  })
 
   app.get('/posts/new', (req, res) => {
     res.render('posts-new');
@@ -30,8 +28,7 @@ module.exports = (app) => {
     Post.find({ subreddit: req.params.subreddit })
       .then(posts => {
         res.render("posts-index", { posts });
-      })
-      .catch(err => {
+      }).catch(err => {
         console.log(err);
       });
   });
@@ -45,7 +42,7 @@ module.exports = (app) => {
     post.save((err, post) => {
       // REDIRECT TO THE ROOT
       return res.redirect(`/`);
-    })
+    });
   });
 
 };
