@@ -1,12 +1,16 @@
 module.exports = (app) => {
   const Post = require('../models/post');
 
-  app.get('/', (req, res) => {
-    Post.find({}).then(posts => {
-      res.render("posts-index", { posts });
-    }).catch(err => {
-      console.log(err.message);
-    });
+  app.get("/", (req, res) => {
+    var currentUser = req.user;
+  
+    Post.find({})
+      .then(posts => {
+        res.render("posts-index", { posts, currentUser });
+      })
+      .catch(err => {
+        console.log(err.message);
+      });
   });
 
   app.get('/posts/new', (req, res) => {
@@ -34,15 +38,16 @@ module.exports = (app) => {
   });
 
   // CREATE
-  app.post('/posts/new', (req, res) => {
-    // INSTANTIATE INSTANCE OF POST MODEL
+app.post("/posts/new", (req, res) => {
+  if (req.user) {
     const post = new Post(req.body);
 
-    // SAVE INSTANCE OF POST MODEL TO DB
-    post.save((err, post) => {
-      // REDIRECT TO THE ROOT
+    post.save(function(err, post) {
       return res.redirect(`/`);
     });
-  });
+  } else {
+    return res.status(401); // UNAUTHORIZED
+  }
+});
 
 };
