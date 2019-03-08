@@ -6,11 +6,12 @@ const UserSchema = new Schema({
   createdAt: { type: Date },
   updatedAt: { type: Date },
   password: { type: String, select: false },
-  username: { type: String, required: true }
+  username: { type: String, required: true },
+  posts: [{ type: Schema.Types.ObjectId, ref: 'posts', required: false }]
 });
 
 // Must use function here! ES6 => functions do not bind this!
-UserSchema.pre("save", function(next) {
+UserSchema.pre("save", function (next) {
   // SET createdAt AND updatedAt
   const now = new Date();
   this.updatedAt = now;
@@ -32,7 +33,7 @@ UserSchema.pre("save", function(next) {
 });
 
 // Need to use function to enable this.password to work.
-UserSchema.methods.comparePassword = function(password, done) {
+UserSchema.methods.comparePassword = function (password, done) {
   bcrypt.compare(password, this.password, (err, isMatch) => {
     done(err, isMatch);
   });
