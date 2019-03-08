@@ -21,31 +21,29 @@ module.exports = (app) => {
     res.render('posts-new');
   })
 
-  // GET A POST BY ITS ID
+  // SHOW
   app.get("/posts/:id", function (req, res) {
-        var currentUser = req.user;
-        // LOOK UP THE POST
+      var currentUser = req.user;
+      Post.findById(req.params.id).populate('comments').lean()
+          .then(post => {
+              res.render("posts-show", { post, currentUser });
+          })
+          .catch(err => {
+              console.log(err.message);
+          });
+  });
 
-        Post.findById(req.params.id).populate('comments').populate('author')
-            .then(post => {
-                res.render("posts-show", { post, currentUser });
-            })
-            .catch(err => {
-                console.log(err.message);
-            });
-    });
-
-    // SUBREDDIT
-    app.get("/n/:subreddit", function (req, res) {
-        var currentUser = req.user;
-        Post.find({ subreddit: req.params.subreddit }).populate('author')
-            .then(posts => {
-                res.render("posts-index", { posts, currentUser });
-            })
-            .catch(err => {
-                console.log(err);
-            });
-    });
+  // SUBREDDIT
+  app.get("/n/:subreddit", function (req, res) {
+      var currentUser = req.user;
+      Post.find({ subreddit: req.params.subreddit }).lean()
+          .then(posts => {
+              res.render("posts-index", { posts, currentUser });
+          })
+          .catch(err => {
+              console.log(err);
+          });
+  });
 
   // CREATE
     app.post("/posts/new", (req, res) => {
